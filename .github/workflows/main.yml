@@ -1,0 +1,24 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Connect to EC2 and run command
+      run: |
+        # Add your SSH private key to the SSH agent
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        ssh-add private_key.pem
+
+        # Replace 'your-ec2-ip' with your actual EC2 IP
+        ssh -i private_key.pem ec2-user@your-ec2-ip 'echo "Hello from GitHub Actions!"'
